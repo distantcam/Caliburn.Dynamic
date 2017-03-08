@@ -1,8 +1,10 @@
-﻿namespace Caliburn.Dynamic
+﻿using System.Windows.Input;
+
+namespace Caliburn.Dynamic
 {
-    public interface ICommand : IRaiseCanExecuteChanged, System.Windows.Input.ICommand
-    {
-    }
+    //public interface ICommand : IRaiseCanExecuteChanged, System.Windows.Input.ICommand
+    //{
+    //}
 
     public interface ICommand<in T> : IRaiseCanExecuteChanged, ICommand
     {

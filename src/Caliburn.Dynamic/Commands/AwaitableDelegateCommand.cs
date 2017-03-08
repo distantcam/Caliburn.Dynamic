@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Caliburn.Dynamic.Commands
 {
@@ -22,9 +23,9 @@ namespace Caliburn.Dynamic.Commands
             this.executeMethod = executeMethod;
         }
 
-        bool System.Windows.Input.ICommand.CanExecute(object parameter) => CanExecute((T)parameter);
+        bool ICommand.CanExecute(object parameter) => CanExecute((T)parameter);
 
-        async void System.Windows.Input.ICommand.Execute(object parameter) => await ExecuteAsync((T)parameter);
+        async void ICommand.Execute(object parameter) => await ExecuteAsync((T)parameter);
 
         public async Task ExecuteAsync(T parameter)
         {

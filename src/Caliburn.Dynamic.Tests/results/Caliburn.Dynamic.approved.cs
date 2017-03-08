@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reactive.Concurrency;
 using System.Reactive.Subjects;
+using System.Windows.Input;
 [assembly: System.Runtime.Versioning.TargetFrameworkAttribute(".NETFramework,Version=v4.6.1", FrameworkDisplayName=".NET Framework 4.6.1")]
 namespace Caliburn.Dynamic
 {
@@ -25,8 +26,8 @@ namespace Caliburn.Dynamic
     }
     public static class Command
     {
-        public static Caliburn.Dynamic.ICommand Create(Action executeMethod) { }
-        public static Caliburn.Dynamic.ICommand Create(Action executeMethod, Func<Boolean> canExecuteMethod) { }
+        public static ICommand Create(Action executeMethod) { }
+        public static ICommand Create(Action executeMethod, Func<Boolean> canExecuteMethod) { }
         public static Caliburn.Dynamic.ICommand<T> Create<T>(Action<T> executeMethod) { }
         public static Caliburn.Dynamic.ICommand<T> Create<T>(Action<T> executeMethod, Func<T, Boolean> canExecuteMethod) { }
         public static Caliburn.Dynamic.IAsyncCommand CreateAsync(Func<System.Threading.Tasks.Task> executeMethod) { }
@@ -139,18 +140,17 @@ namespace Caliburn.Dynamic
         protected virtual void OnViewLoaded(Object view) { }
         protected virtual void OnViewReady(Object view) { }
     }
-    public interface IAsyncCommand : Caliburn.Dynamic.IAsyncCommand<Object>, Caliburn.Dynamic.IRaiseCanExecuteChanged, System.Windows.Input.ICommand { }
-    public interface IAsyncCommand<in T> : Caliburn.Dynamic.IRaiseCanExecuteChanged, System.Windows.Input.ICommand
+    public interface IAsyncCommand : Caliburn.Dynamic.IAsyncCommand<Object>, Caliburn.Dynamic.IRaiseCanExecuteChanged, ICommand { }
+    public interface IAsyncCommand<in T> : Caliburn.Dynamic.IRaiseCanExecuteChanged, ICommand
     {
         Boolean CanExecute(T obj);
         System.Threading.Tasks.Task ExecuteAsync(T obj);
     }
-    public interface ICommand : Caliburn.Dynamic.IRaiseCanExecuteChanged, System.Windows.Input.ICommand { }
-    public interface ICommand<in T> : Caliburn.Dynamic.ICommand, Caliburn.Dynamic.IRaiseCanExecuteChanged, System.Windows.Input.ICommand
+    public interface ICommand<in T> : Caliburn.Dynamic.IRaiseCanExecuteChanged, ICommand
     {
         Boolean CanExecute(T obj); void Execute(T obj);
     }
-    public interface IObservableCommand : IDisposable, System.Windows.Input.ICommand { }
+    public interface IObservableCommand : IDisposable, ICommand { }
     public interface IObservableDataErrorInfo
     {
         IObservable<Caliburn.Dynamic.DataErrorChanged> ErrorsChanged { get; }
@@ -196,10 +196,10 @@ namespace Caliburn.Dynamic
     {
         public static IObservable<Caliburn.Dynamic.PropertyChangedData<TProperty>> CastPropertyType<TProperty>(this IObservable<Caliburn.Dynamic.PropertyChangedData> observable) { }
         public static IObservable<Caliburn.Dynamic.PropertyChangingData<TProperty>> CastPropertyType<TProperty>(this IObservable<Caliburn.Dynamic.PropertyChangingData> observable) { }
-        public static IDisposable Execute<T>(this IObservable<T> observable, System.Windows.Input.ICommand command) { }
+        public static IDisposable Execute<T>(this IObservable<T> observable, ICommand command) { }
         public static IDisposable Execute<T>(this IObservable<T> observable, Caliburn.Dynamic.ICommand<T> command) { }
         public static IDisposable ExecuteAsync<T>(this IObservable<T> observable, Caliburn.Dynamic.IAsyncCommand<T> command) { }
-        public static void RaiseCanExecuteChanged(this System.Windows.Input.ICommand command) { }
+        public static void RaiseCanExecuteChanged(this ICommand command) { }
         public static Caliburn.Dynamic.IObservableCommand ToCommand(this IObservable<Boolean> canExecuteObservable, Func<Object, System.Threading.Tasks.Task> action) { }
         public static Caliburn.Dynamic.IObservableCommand ToCommand(this IObservable<Caliburn.Dynamic.PropertyChangedData<Boolean>> canExecuteObservable, Func<Object, System.Threading.Tasks.Task> action) { }
         public static Caliburn.Dynamic.IObservableCommand ToCommand(this IObservable<Boolean> canExecuteObservable, Action<Object> action) { }

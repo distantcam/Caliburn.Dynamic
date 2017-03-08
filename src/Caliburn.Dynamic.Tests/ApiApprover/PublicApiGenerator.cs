@@ -416,6 +416,7 @@ namespace ApiApprover
             "System.ComponentModel",
             "System.Reactive.Concurrency",
             "System.Reactive.Subjects",
+            "System.Windows.Input",
             "Caliburn.Micro"
         };
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Input;
 
 namespace Caliburn.Dynamic.Commands
 {
@@ -21,9 +22,9 @@ namespace Caliburn.Dynamic.Commands
             this.executeMethod = executeMethod;
         }
 
-        bool System.Windows.Input.ICommand.CanExecute(object parameter) => CanExecute((T)parameter);
+        bool ICommand.CanExecute(object parameter) => CanExecute((T)parameter);
 
-        void System.Windows.Input.ICommand.Execute(object parameter) => Execute((T)parameter);
+        void ICommand.Execute(object parameter) => Execute((T)parameter);
 
         public void Execute(T parameter)
         {
