@@ -1,0 +1,22 @@
+skip_tags: true
+
+configuration: Release
+
+before_build:
+  - nuget restore src\Pirac.sln
+
+cache:
+  - src\packages -> **\packages.config
+
+build:
+  parallel: true
+  project: src\Pirac.sln
+
+before_test:
+  - ps: cd src\Pirac.Tests\bin\Release
+
+test_script:
+  - nunit3-console Pirac.Tests.dll --result=myresults.xml;format=AppVeyor
+
+artifacts:
+  - path: src\artifacts\*.nupkg
