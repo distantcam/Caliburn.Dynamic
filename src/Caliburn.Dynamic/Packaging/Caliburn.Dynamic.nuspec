@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/01/nuspec.xsd">
+    <metadata>
+        <id>Caliburn.Dynamic</id>
+        <version>$version$</version>
+        <title>Caliburn.Dynamic</title>
+        <authors>Cameron MacFarland</authors>
+        <owners>Cameron MacFarland</owners>
+        <licenseUrl>https://github.com/distantcam/Caliburn.Dynamic/blob/master/license.txt</licenseUrl>
+        <projectUrl>http://github.com/distantcam/Caliburn.Dynamic</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Adds Reactive Extensions and dynamic capabilities to Caliburn Micro.</description>
+        <language>en-AU</language>
+        <tags>WPF, MVVM</tags>
+    </metadata>
+</package>

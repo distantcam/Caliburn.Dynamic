@@ -3,20 +3,20 @@ skip_tags: true
 configuration: Release
 
 before_build:
-  - nuget restore src\Pirac.sln
+  - nuget restore src\Caliburn.Dynamic.sln
 
 cache:
   - src\packages -> **\packages.config
 
 build:
   parallel: true
-  project: src\Pirac.sln
+  project: src\Caliburn.Dynamic.sln
 
 before_test:
-  - ps: cd src\Pirac.Tests\bin\Release
+  - ps: cd src\Caliburn.Dynamic.Tests\bin\Release
 
 test_script:
-  - nunit3-console Pirac.Tests.dll --result=myresults.xml;format=AppVeyor
+  - nunit3-console Caliburn.Dynamic.Tests.dll --result=myresults.xml;format=AppVeyor
 
 artifacts:
   - path: src\artifacts\*.nupkg
