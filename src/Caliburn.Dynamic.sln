@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Sample\Sample.csproj", "{777B27BD-4988-40F9-AE79-49B7F32A5246}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Dynamic", "Caliburn.Dynamic\Caliburn.Dynamic.csproj", "{0C5FB4A9-F092-4937-8A27-1A321B92916E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9E8C4D7F-B939-4A34-AEBB-A3323DDCF436} = {9E8C4D7F-B939-4A34-AEBB-A3323DDCF436}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Dynamic.Tests", "Caliburn.Dynamic.Tests\Caliburn.Dynamic.Tests.csproj", "{6F2A8818-7828-4379-B2A6-44515BD5C442}"
 EndProject
