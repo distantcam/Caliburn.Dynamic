@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reactive.Concurrency;
 using System.Reactive.Subjects;
+using System.Threading.Tasks;
 using System.Windows.Input;
 [assembly: System.Runtime.Versioning.TargetFrameworkAttribute(".NETFramework,Version=v4.6.1", FrameworkDisplayName=".NET Framework 4.6.1")]
 namespace Caliburn.Dynamic
 {
-    public class BindableObject : System.Dynamic.DynamicObject, Caliburn.Dynamic.IObservableDataErrorInfo, Caliburn.Dynamic.IObservablePropertyChanged, Caliburn.Dynamic.IObservablePropertyChanging, INotifyDataErrorInfo, INotifyPropertyChanged, INotifyPropertyChanging, IDisposable
+    public class BindableObject : System.Dynamic.DynamicObject, IObservableDataErrorInfo, IObservablePropertyChanged, IObservablePropertyChanging, INotifyDataErrorInfo, INotifyPropertyChanged, INotifyPropertyChanging, IDisposable
     {
         public BindableObject() { }
         public Boolean ChangeNotificationEnabled { get; }
@@ -28,12 +29,12 @@ namespace Caliburn.Dynamic
     {
         public static ICommand Create(Action executeMethod) { }
         public static ICommand Create(Action executeMethod, Func<Boolean> canExecuteMethod) { }
-        public static Caliburn.Dynamic.ICommand<T> Create<T>(Action<T> executeMethod) { }
-        public static Caliburn.Dynamic.ICommand<T> Create<T>(Action<T> executeMethod, Func<T, Boolean> canExecuteMethod) { }
-        public static Caliburn.Dynamic.IAsyncCommand CreateAsync(Func<System.Threading.Tasks.Task> executeMethod) { }
-        public static Caliburn.Dynamic.IAsyncCommand CreateAsync(Func<System.Threading.Tasks.Task> executeMethod, Func<Boolean> canExecuteMethod) { }
-        public static Caliburn.Dynamic.IAsyncCommand<T> CreateAsync<T>(Func<T, System.Threading.Tasks.Task> executeMethod) { }
-        public static Caliburn.Dynamic.IAsyncCommand<T> CreateAsync<T>(Func<T, System.Threading.Tasks.Task> executeMethod, Func<T, Boolean> canExecuteMethod) { }
+        public static ICommand<T> Create<T>(Action<T> executeMethod) { }
+        public static ICommand<T> Create<T>(Action<T> executeMethod, Func<T, Boolean> canExecuteMethod) { }
+        public static IAsyncCommand CreateAsync(Func<Task> executeMethod) { }
+        public static IAsyncCommand CreateAsync(Func<Task> executeMethod, Func<Boolean> canExecuteMethod) { }
+        public static IAsyncCommand<T> CreateAsync<T>(Func<T, Task> executeMethod) { }
+        public static IAsyncCommand<T> CreateAsync<T>(Func<T, Task> executeMethod, Func<T, Boolean> canExecuteMethod) { }
     }
     public class DataErrorChanged
     {
@@ -41,7 +42,7 @@ namespace Caliburn.Dynamic
         public String Error { get; }
         public String PropertyName { get; }
     }
-    public class DynamicConductor<T> : Caliburn.Dynamic.DynamicConductorBaseWithActiveItem<T>
+    public class DynamicConductor<T> : DynamicConductorBaseWithActiveItem<T>
         where T :  class
     {
         public DynamicConductor() { }
@@ -55,7 +56,7 @@ namespace Caliburn.Dynamic
             where T :  class
         {
             public Collection() { }
-            public class AllActive<T> : Caliburn.Dynamic.DynamicConductorBase<T>
+            public class AllActive<T> : DynamicConductorBase<T>
                 where T :  class
             {
                 public AllActive(Boolean openPublicItems) { }
@@ -70,7 +71,7 @@ namespace Caliburn.Dynamic
                 protected override void OnDeactivate(Boolean close) { }
                 protected override void OnInitialize() { }
             }
-            public class OneActive<T> : Caliburn.Dynamic.DynamicConductorBaseWithActiveItem<T>
+            public class OneActive<T> : DynamicConductorBaseWithActiveItem<T>
                 where T :  class
             {
                 public OneActive() { }
@@ -86,7 +87,7 @@ namespace Caliburn.Dynamic
             }
         }
     }
-    public abstract class DynamicConductorBase<T> : Caliburn.Dynamic.DynamicScreen, IConductor, INotifyPropertyChangedEx, IParent, IParent<T>, INotifyPropertyChanged
+    public abstract class DynamicConductorBase<T> : DynamicScreen, IConductor, INotifyPropertyChangedEx, IParent, IParent<T>, INotifyPropertyChanged
         where T :  class
     {
         public DynamicConductorBase() { }
@@ -99,14 +100,14 @@ namespace Caliburn.Dynamic
         public abstract IEnumerable<T> GetChildren();
         protected virtual void OnActivationProcessed(T item, Boolean success) { }
     }
-    public abstract class DynamicConductorBaseWithActiveItem<T> : Caliburn.Dynamic.DynamicConductorBase<T>, IConductActiveItem, IConductor, IHaveActiveItem, INotifyPropertyChangedEx, IParent, INotifyPropertyChanged
+    public abstract class DynamicConductorBaseWithActiveItem<T> : DynamicConductorBase<T>, IConductActiveItem, IConductor, IHaveActiveItem, INotifyPropertyChangedEx, IParent, INotifyPropertyChanged
         where T :  class
     {
         protected DynamicConductorBaseWithActiveItem() { }
         public T ActiveItem { get; set; }
         protected virtual void ChangeActiveItem(T newItem, Boolean closePrevious) { }
     }
-    public class DynamicScreen : Caliburn.Dynamic.DynamicViewAware, IActivate, IChild, IClose, IDeactivate, IGuardClose, IHaveDisplayName, INotifyPropertyChangedEx, IScreen, INotifyPropertyChanged
+    public class DynamicScreen : DynamicViewAware, IActivate, IChild, IClose, IDeactivate, IGuardClose, IHaveDisplayName, INotifyPropertyChangedEx, IScreen, INotifyPropertyChanged
     {
         public DynamicScreen() { }
         public IObservable<ActivationEventArgs> Activated { get; }
@@ -125,7 +126,7 @@ namespace Caliburn.Dynamic
         protected virtual void OnInitialize() { }
         public virtual void TryClose(Nullable<Boolean> dialogResult = null) { }
     }
-    public class DynamicViewAware : Caliburn.Dynamic.BindableObject, IViewAware
+    public class DynamicViewAware : BindableObject, IViewAware
     {
         public static readonly Object DefaultContext;
         public DynamicViewAware() { }
@@ -140,28 +141,28 @@ namespace Caliburn.Dynamic
         protected virtual void OnViewLoaded(Object view) { }
         protected virtual void OnViewReady(Object view) { }
     }
-    public interface IAsyncCommand : Caliburn.Dynamic.IAsyncCommand<Object>, Caliburn.Dynamic.IRaiseCanExecuteChanged, ICommand { }
-    public interface IAsyncCommand<in T> : Caliburn.Dynamic.IRaiseCanExecuteChanged, ICommand
+    public interface IAsyncCommand : IAsyncCommand<Object>, IRaiseCanExecuteChanged, ICommand { }
+    public interface IAsyncCommand<in T> : IRaiseCanExecuteChanged, ICommand
     {
         Boolean CanExecute(T obj);
-        System.Threading.Tasks.Task ExecuteAsync(T obj);
+        Task ExecuteAsync(T obj);
     }
-    public interface ICommand<in T> : Caliburn.Dynamic.IRaiseCanExecuteChanged, ICommand
+    public interface ICommand<in T> : IRaiseCanExecuteChanged, ICommand
     {
         Boolean CanExecute(T obj); void Execute(T obj);
     }
     public interface IObservableCommand : IDisposable, ICommand { }
     public interface IObservableDataErrorInfo
     {
-        IObservable<Caliburn.Dynamic.DataErrorChanged> ErrorsChanged { get; }
+        IObservable<DataErrorChanged> ErrorsChanged { get; }
     }
     public interface IObservablePropertyChanged
     {
-        IObservable<Caliburn.Dynamic.PropertyChangedData> Changed { get; }
+        IObservable<PropertyChangedData> Changed { get; }
     }
     public interface IObservablePropertyChanging
     {
-        IObservable<Caliburn.Dynamic.PropertyChangingData> Changing { get; }
+        IObservable<PropertyChangingData> Changing { get; }
     }
     public interface IRaiseCanExecuteChanged
     { void RaiseCanExecuteChanged();
@@ -194,24 +195,28 @@ namespace Caliburn.Dynamic
     }
     public static class PublicExtensions
     {
-        public static IObservable<Caliburn.Dynamic.PropertyChangedData<TProperty>> CastPropertyType<TProperty>(this IObservable<Caliburn.Dynamic.PropertyChangedData> observable) { }
-        public static IObservable<Caliburn.Dynamic.PropertyChangingData<TProperty>> CastPropertyType<TProperty>(this IObservable<Caliburn.Dynamic.PropertyChangingData> observable) { }
+        public static IObservable<PropertyChangedData<TProperty>> CastPropertyType<TProperty>(this IObservable<PropertyChangedData> observable) { }
+        public static IObservable<PropertyChangingData<TProperty>> CastPropertyType<TProperty>(this IObservable<PropertyChangingData> observable) { }
         public static IDisposable Execute<T>(this IObservable<T> observable, ICommand command) { }
-        public static IDisposable Execute<T>(this IObservable<T> observable, Caliburn.Dynamic.ICommand<T> command) { }
-        public static IDisposable ExecuteAsync<T>(this IObservable<T> observable, Caliburn.Dynamic.IAsyncCommand<T> command) { }
+        public static IDisposable Execute<T>(this IObservable<T> observable, ICommand<T> command) { }
+        public static IDisposable ExecuteAsync<T>(this IObservable<T> observable, IAsyncCommand<T> command) { }
         public static void RaiseCanExecuteChanged(this ICommand command) { }
-        public static Caliburn.Dynamic.IObservableCommand ToCommand(this IObservable<Boolean> canExecuteObservable, Func<Object, System.Threading.Tasks.Task> action) { }
-        public static Caliburn.Dynamic.IObservableCommand ToCommand(this IObservable<Caliburn.Dynamic.PropertyChangedData<Boolean>> canExecuteObservable, Func<Object, System.Threading.Tasks.Task> action) { }
-        public static Caliburn.Dynamic.IObservableCommand ToCommand(this IObservable<Boolean> canExecuteObservable, Action<Object> action) { }
-        public static Caliburn.Dynamic.IObservableCommand ToCommand(this IObservable<Caliburn.Dynamic.PropertyChangedData<Boolean>> canExecuteObservable, Action<Object> action) { }
-        public static IObservable<Caliburn.Dynamic.PropertyChangedData> WhenPropertiesChanged(this Caliburn.Dynamic.IObservablePropertyChanged changed, [ParamArrayAttribute()] String[] propertyNames) { }
-        public static IObservable<Caliburn.Dynamic.PropertyChangedData<TProperty>> WhenPropertiesChanged<TProperty>(this Caliburn.Dynamic.IObservablePropertyChanged changed, [ParamArrayAttribute()] String[] propertyNames) { }
-        public static IObservable<Caliburn.Dynamic.PropertyChangingData> WhenPropertiesChanging(this Caliburn.Dynamic.IObservablePropertyChanging changing, [ParamArrayAttribute()] String[] propertyNames) { }
-        public static IObservable<Caliburn.Dynamic.PropertyChangingData<TProperty>> WhenPropertiesChanging<TProperty>(this Caliburn.Dynamic.IObservablePropertyChanging changing, [ParamArrayAttribute()] String[] propertyNames) { }
-        public static IObservable<Caliburn.Dynamic.PropertyChangedData> WhenPropertyChanged(this Caliburn.Dynamic.IObservablePropertyChanged changed, String propertyName) { }
-        public static IObservable<Caliburn.Dynamic.PropertyChangedData<TProperty>> WhenPropertyChanged<TProperty>(this Caliburn.Dynamic.IObservablePropertyChanged changed, String propertyName) { }
-        public static IObservable<Caliburn.Dynamic.PropertyChangingData> WhenPropertyChanging(this Caliburn.Dynamic.IObservablePropertyChanging changing, String propertyName) { }
-        public static IObservable<Caliburn.Dynamic.PropertyChangingData<TProperty>> WhenPropertyChanging<TProperty>(this Caliburn.Dynamic.IObservablePropertyChanging changing, String propertyName) { }
+        public static IObservableCommand ToCommand(this IObservable<Boolean> canExecuteObservable, Func<Object, Task> action) { }
+        public static IObservableCommand ToCommand(this IObservable<Boolean> canExecuteObservable, Func<Task> action) { }
+        public static IObservableCommand ToCommand(this IObservable<PropertyChangedData<Boolean>> canExecuteObservable, Func<Object, Task> action) { }
+        public static IObservableCommand ToCommand(this IObservable<PropertyChangedData<Boolean>> canExecuteObservable, Func<Task> action) { }
+        public static IObservableCommand ToCommand(this IObservable<Boolean> canExecuteObservable, Action<Object> action) { }
+        public static IObservableCommand ToCommand(this IObservable<Boolean> canExecuteObservable, Action action) { }
+        public static IObservableCommand ToCommand(this IObservable<PropertyChangedData<Boolean>> canExecuteObservable, Action<Object> action) { }
+        public static IObservableCommand ToCommand(this IObservable<PropertyChangedData<Boolean>> canExecuteObservable, Action action) { }
+        public static IObservable<PropertyChangedData> WhenPropertiesChanged(this IObservablePropertyChanged changed, [ParamArrayAttribute()] String[] propertyNames) { }
+        public static IObservable<PropertyChangedData<TProperty>> WhenPropertiesChanged<TProperty>(this IObservablePropertyChanged changed, [ParamArrayAttribute()] String[] propertyNames) { }
+        public static IObservable<PropertyChangingData> WhenPropertiesChanging(this IObservablePropertyChanging changing, [ParamArrayAttribute()] String[] propertyNames) { }
+        public static IObservable<PropertyChangingData<TProperty>> WhenPropertiesChanging<TProperty>(this IObservablePropertyChanging changing, [ParamArrayAttribute()] String[] propertyNames) { }
+        public static IObservable<PropertyChangedData> WhenPropertyChanged(this IObservablePropertyChanged changed, String propertyName) { }
+        public static IObservable<PropertyChangedData<TProperty>> WhenPropertyChanged<TProperty>(this IObservablePropertyChanged changed, String propertyName) { }
+        public static IObservable<PropertyChangingData> WhenPropertyChanging(this IObservablePropertyChanging changing, String propertyName) { }
+        public static IObservable<PropertyChangingData<TProperty>> WhenPropertyChanging<TProperty>(this IObservablePropertyChanging changing, String propertyName) { }
     }
     public static class Schedulers
     {

@@ -416,6 +416,7 @@ namespace ApiApprover
             "System.ComponentModel",
             "System.Reactive.Concurrency",
             "System.Reactive.Subjects",
+            "System.Threading.Tasks",
             "System.Windows.Input",
             "Caliburn.Micro"
         };
@@ -800,7 +801,7 @@ namespace ApiApprover
 
             if (!type.IsNested)
             {
-                return (!string.IsNullOrEmpty(type.Namespace) && !Usings.Contains(type.Namespace) ? (type.Namespace + ".") : "") + type.Name;
+                return (!string.IsNullOrEmpty(type.Namespace) && !Usings.Contains(type.Namespace) && type.Namespace != "Caliburn.Dynamic" ? (type.Namespace + ".") : "") + type.Name;
             }
 
             return GetTypeName(type.DeclaringType) + "." + type.Name;
