@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Reactive.Subjects;
 using System.Threading;
 using Caliburn.Micro;
@@ -288,23 +289,40 @@ namespace Caliburn.Dynamic
             PlatformProvider.Current.GetViewCloseAction(this, Views.Values, dialogResult).OnUIThread();
         }
 
-        [Obsolete("Use SuppressNotifications instead.", true)]
-        bool INotifyPropertyChangedEx.IsNotifying
+        /// <summary>
+        /// Enables/Disables property change notification.
+        /// Virtualized in order to help with document oriented view models.
+        /// </summary>
+        /// <remarks>Obsolete. Should use ChangeNotificationEnabled and SuppressNotifications instead.</remarks>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [Obsolete("Use ChangeNotificationEnabled and SuppressNotifications instead.", true)]
+        public bool IsNotifying
         {
-            get { throw new NotSupportedException(); }
+            get { return ChangeNotificationEnabled; }
             set { throw new NotSupportedException(); }
         }
 
-        [Obsolete("Use OnPropertyChanging and OnPropertyChanged instead.", true)]
-        void INotifyPropertyChangedEx.NotifyOfPropertyChange(string propertyName)
+        /// <summary>
+        /// Notifies subscribers of the property change.
+        /// </summary>
+        /// <param name = "propertyName">Name of the property.</param>
+        /// <remarks>Obsolete. Should use OnPropertyChanging and OnPropertyChanged instead.</remarks>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [Obsolete("Use OnPropertyChanging and OnPropertyChanged instead.")]
+        public void NotifyOfPropertyChange(string propertyName)
         {
-            throw new NotSupportedException();
+            propertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        [Obsolete("Do not use.", true)]
-        void INotifyPropertyChangedEx.Refresh()
+        /// <summary>
+        /// Raises a change notification indicating that all bindings should be refreshed.
+        /// </summary>
+        /// <remarks>Obsolete. Do not use.</remarks>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [Obsolete("Do not use.")]
+        public void Refresh()
         {
-            throw new NotSupportedException();
+            propertyChanged?.Invoke(this, new PropertyChangedEventArgs(string.Empty));
         }
     }
 }

@@ -6,7 +6,7 @@ namespace Caliburn.Dynamic
 {
     partial class BindableObject : INotifyPropertyChanged, INotifyPropertyChanging
     {
-        private PropertyChangedEventHandler propertyChanged;
+        internal PropertyChangedEventHandler propertyChanged;
         private PropertyChangingEventHandler propertyChanging;
 
         event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged

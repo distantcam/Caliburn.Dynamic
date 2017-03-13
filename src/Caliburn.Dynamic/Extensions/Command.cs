@@ -17,16 +17,16 @@ namespace Caliburn.Dynamic
                 canExecuteChanged.RaiseCanExecuteChanged();
         }
 
-        public static IObservableCommand ToCommand(this IObservable<bool> canExecuteObservable, Func<object, Task> action) =>
+        public static IObservableCommand ToCommandAsync(this IObservable<bool> canExecuteObservable, Func<object, Task> action) =>
             new ObservableCommand(canExecuteObservable, action);
 
-        public static IObservableCommand ToCommand(this IObservable<bool> canExecuteObservable, Func<Task> action) =>
+        public static IObservableCommand ToCommandAsync(this IObservable<bool> canExecuteObservable, Func<Task> action) =>
             new ObservableCommand(canExecuteObservable, _ => action());
 
-        public static IObservableCommand ToCommand(this IObservable<PropertyChangedData<bool>> canExecuteObservable, Func<object, Task> action) =>
+        public static IObservableCommand ToCommandAsync(this IObservable<PropertyChangedData<bool>> canExecuteObservable, Func<object, Task> action) =>
             new ObservableCommand(canExecuteObservable.Select(pc => pc.After), action);
 
-        public static IObservableCommand ToCommand(this IObservable<PropertyChangedData<bool>> canExecuteObservable, Func<Task> action) =>
+        public static IObservableCommand ToCommandAsync(this IObservable<PropertyChangedData<bool>> canExecuteObservable, Func<Task> action) =>
             new ObservableCommand(canExecuteObservable.Select(pc => pc.After), _ => action());
 
         public static IObservableCommand ToCommand(this IObservable<bool> canExecuteObservable, Action<object> action) =>

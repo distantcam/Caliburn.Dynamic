@@ -6,7 +6,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using System.Windows.Input;
-[assembly: System.Runtime.Versioning.TargetFrameworkAttribute(".NETFramework,Version=v4.6.1", FrameworkDisplayName=".NET Framework 4.6.1")]
+[assembly: System.Runtime.Versioning.TargetFrameworkAttribute(".NETFramework,Version=v4.5", FrameworkDisplayName=".NET Framework 4.5")]
 namespace Caliburn.Dynamic
 {
     public class BindableObject : System.Dynamic.DynamicObject, IObservableDataErrorInfo, IObservablePropertyChanged, IObservablePropertyChanging, INotifyDataErrorInfo, INotifyPropertyChanged, INotifyPropertyChanging, IDisposable
@@ -116,14 +116,20 @@ namespace Caliburn.Dynamic
         public virtual String DisplayName { get; set; }
         public Boolean IsActive { get; }
         public Boolean IsInitialized { get; }
+        [ObsoleteAttribute("Use ChangeNotificationEnabled and SuppressNotifications instead.", true)]
+        public Boolean IsNotifying { get; set; }
         public virtual Object Parent { get; set; }
         public event EventHandler<ActivationEventArgs> Caliburn.Micro.IActivate.Activated;
         public event EventHandler<DeactivationEventArgs> Caliburn.Micro.IDeactivate.AttemptingDeactivation;
         public event EventHandler<DeactivationEventArgs> Caliburn.Micro.IDeactivate.Deactivated;
         public virtual void CanClose(Action<Boolean> callback) { }
+        [ObsoleteAttribute("Use OnPropertyChanging and OnPropertyChanged instead.")]
+        public void NotifyOfPropertyChange(String propertyName) { }
         protected virtual void OnActivate() { }
         protected virtual void OnDeactivate(Boolean close) { }
         protected virtual void OnInitialize() { }
+        [ObsoleteAttribute("Do not use.")]
+        public void Refresh() { }
         public virtual void TryClose(Nullable<Boolean> dialogResult = null) { }
     }
     public class DynamicViewAware : BindableObject, IViewAware
@@ -201,14 +207,14 @@ namespace Caliburn.Dynamic
         public static IDisposable Execute<T>(this IObservable<T> observable, ICommand<T> command) { }
         public static IDisposable ExecuteAsync<T>(this IObservable<T> observable, IAsyncCommand<T> command) { }
         public static void RaiseCanExecuteChanged(this ICommand command) { }
-        public static IObservableCommand ToCommand(this IObservable<Boolean> canExecuteObservable, Func<Object, Task> action) { }
-        public static IObservableCommand ToCommand(this IObservable<Boolean> canExecuteObservable, Func<Task> action) { }
-        public static IObservableCommand ToCommand(this IObservable<PropertyChangedData<Boolean>> canExecuteObservable, Func<Object, Task> action) { }
-        public static IObservableCommand ToCommand(this IObservable<PropertyChangedData<Boolean>> canExecuteObservable, Func<Task> action) { }
         public static IObservableCommand ToCommand(this IObservable<Boolean> canExecuteObservable, Action<Object> action) { }
         public static IObservableCommand ToCommand(this IObservable<Boolean> canExecuteObservable, Action action) { }
         public static IObservableCommand ToCommand(this IObservable<PropertyChangedData<Boolean>> canExecuteObservable, Action<Object> action) { }
         public static IObservableCommand ToCommand(this IObservable<PropertyChangedData<Boolean>> canExecuteObservable, Action action) { }
+        public static IObservableCommand ToCommandAsync(this IObservable<Boolean> canExecuteObservable, Func<Object, Task> action) { }
+        public static IObservableCommand ToCommandAsync(this IObservable<Boolean> canExecuteObservable, Func<Task> action) { }
+        public static IObservableCommand ToCommandAsync(this IObservable<PropertyChangedData<Boolean>> canExecuteObservable, Func<Object, Task> action) { }
+        public static IObservableCommand ToCommandAsync(this IObservable<PropertyChangedData<Boolean>> canExecuteObservable, Func<Task> action) { }
         public static IObservable<PropertyChangedData> WhenPropertiesChanged(this IObservablePropertyChanged changed, [ParamArrayAttribute()] String[] propertyNames) { }
         public static IObservable<PropertyChangedData<TProperty>> WhenPropertiesChanged<TProperty>(this IObservablePropertyChanged changed, [ParamArrayAttribute()] String[] propertyNames) { }
         public static IObservable<PropertyChangingData> WhenPropertiesChanging(this IObservablePropertyChanging changing, [ParamArrayAttribute()] String[] propertyNames) { }
