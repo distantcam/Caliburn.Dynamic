@@ -68,19 +68,12 @@ namespace Caliburn.Dynamic
                     get { return items; }
                 }
 
-                /// <summary>
-                /// Called when activating.
-                /// </summary>
-                protected override void OnActivate()
+                internal override void OnActivate()
                 {
                     items.OfType<IActivate>().Apply(x => x.Activate());
                 }
 
-                /// <summary>
-                /// Called when deactivating.
-                /// </summary>
-                /// <param name="close">Inidicates whether this instance will be closed.</param>
-                protected override void OnDeactivate(bool close)
+                internal override void OnDeactivate(bool close)
                 {
                     items.OfType<IDeactivate>().Apply(x => x.Deactivate(close));
                     if (close)
@@ -107,10 +100,7 @@ namespace Caliburn.Dynamic
                     });
                 }
 
-                /// <summary>
-                /// Called when initializing.
-                /// </summary>
-                protected override void OnInitialize()
+                internal override void OnInitialize()
                 {
                     if (openPublicItems)
                     {

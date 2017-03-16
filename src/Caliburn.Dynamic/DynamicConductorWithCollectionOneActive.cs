@@ -193,19 +193,12 @@ namespace Caliburn.Dynamic
                     });
                 }
 
-                /// <summary>
-                /// Called when activating.
-                /// </summary>
-                protected override void OnActivate()
+                internal override void OnActivate()
                 {
                     ScreenExtensions.TryActivate(ActiveItem);
                 }
 
-                /// <summary>
-                /// Called when deactivating.
-                /// </summary>
-                /// <param name="close">Inidicates whether this instance will be closed.</param>
-                protected override void OnDeactivate(bool close)
+                internal override void OnDeactivate(bool close)
                 {
                     if (close)
                     {

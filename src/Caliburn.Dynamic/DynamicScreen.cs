@@ -228,16 +228,6 @@ namespace Caliburn.Dynamic
             });
         }
 
-        /// <summary>
-        /// Called when initializing.
-        /// </summary>
-        protected virtual void OnInitialize() { }
-
-        /// <summary>
-        /// Called when activating.
-        /// </summary>
-        protected virtual void OnActivate() { }
-
         void IDeactivate.Deactivate(bool close)
         {
             if (IsActive || (IsInitialized && close))
@@ -264,11 +254,17 @@ namespace Caliburn.Dynamic
             }
         }
 
-        /// <summary>
-        /// Called when deactivating.
-        /// </summary>
-        /// <param name = "close">Inidicates whether this instance will be closed.</param>
-        protected virtual void OnDeactivate(bool close) { }
+        internal virtual void OnInitialize()
+        {
+        }
+
+        internal virtual void OnActivate()
+        {
+        }
+
+        internal virtual void OnDeactivate(bool close)
+        {
+        }
 
         /// <summary>
         /// Called to check whether or not this instance can close.

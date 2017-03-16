@@ -53,7 +53,7 @@ namespace Caliburn.Dynamic
         public IObservable<object> ViewLoaded => viewLoadedObservable;
         public IObservable<object> ViewReady => viewReadyObservable;
 
-        protected void InitializeObservableEvent<TArg>(ref Subject<TArg> subject, ref IObservable<TArg> observable, Action<TArg> subscription)
+        internal void InitializeObservableEvent<TArg>(ref Subject<TArg> subject, ref IObservable<TArg> observable, Action<TArg> subscription)
         {
             subject = new Subject<TArg>();
             observable = subject.AsObservable();
@@ -100,7 +100,7 @@ namespace Caliburn.Dynamic
 
             var nonGeneratedView = PlatformProvider.Current.GetFirstNonGeneratedView(view);
             PlatformProvider.Current.ExecuteOnFirstLoad(nonGeneratedView, OnViewLoaded);
-            OnViewAttached(nonGeneratedView, context);
+            viewAttachedSubject.OnNext(new ViewAttachedEventArgs { View = view, Context = context });
 
             var activatable = this as IActivate;
             if (activatable == null || activatable.IsActive)
@@ -111,6 +111,13 @@ namespace Caliburn.Dynamic
             {
                 AttachViewReadyOnActivated(activatable, nonGeneratedView);
             }
+        }
+
+        object IViewAware.GetView(object context)
+        {
+            object view;
+            Views.TryGetValue(context ?? DefaultContext, out view);
+            return view;
         }
 
         static void AttachViewReadyOnActivated(IActivate activatable, object nonGeneratedView)
@@ -129,42 +136,14 @@ namespace Caliburn.Dynamic
             activatable.Activated += handler;
         }
 
-        /// <summary>
-        /// Called when a view is attached.
-        /// </summary>
-        /// <param name="view">The view.</param>
-        /// <param name="context">The context in which the view appears.</param>
-        protected virtual void OnViewAttached(object view, object context)
+        private void OnViewLoaded(object view)
         {
-            viewAttachedSubject.OnNext(new ViewAttachedEventArgs { View = view, Context = context });
+            viewLoadedSubject.OnNext(view);
         }
 
-        /// <summary>
-        /// Called when an attached view's Loaded event fires.
-        /// </summary>
-        /// <param name = "view"></param>
-        protected virtual void OnViewLoaded(object view)
+        private void OnViewReady(object view)
         {
-        }
-
-        /// <summary>
-        /// Called the first time the page's LayoutUpdated event fires after it is navigated to.
-        /// </summary>
-        /// <param name = "view"></param>
-        protected virtual void OnViewReady(object view)
-        {
-        }
-
-        /// <summary>
-        /// Gets a view previously attached to this instance.
-        /// </summary>
-        /// <param name = "context">The context denoting which view to retrieve.</param>
-        /// <returns>The view.</returns>
-        public virtual object GetView(object context = null)
-        {
-            object view;
-            Views.TryGetValue(context ?? DefaultContext, out view);
-            return view;
+            viewReadySubject.OnNext(view);
         }
     }
 }

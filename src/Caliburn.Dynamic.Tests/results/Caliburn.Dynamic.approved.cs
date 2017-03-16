@@ -50,8 +50,6 @@ namespace Caliburn.Dynamic
         public override void CanClose(Action<Boolean> callback) { }
         public override void DeactivateItem(T item, Boolean close) { }
         public override IEnumerable<T> GetChildren() { }
-        protected override void OnActivate() { }
-        protected override void OnDeactivate(Boolean close) { }
         public class Collection<T>
             where T :  class
         {
@@ -67,9 +65,6 @@ namespace Caliburn.Dynamic
                 public override void DeactivateItem(T item, Boolean close) { }
                 protected override T EnsureItem(T newItem) { }
                 public override IEnumerable<T> GetChildren() { }
-                protected override void OnActivate() { }
-                protected override void OnDeactivate(Boolean close) { }
-                protected override void OnInitialize() { }
             }
             public class OneActive<T> : DynamicConductorBaseWithActiveItem<T>
                 where T :  class
@@ -82,8 +77,6 @@ namespace Caliburn.Dynamic
                 protected virtual T DetermineNextItemToActivate(IList<T> list, Int32 lastIndex) { }
                 protected override T EnsureItem(T newItem) { }
                 public override IEnumerable<T> GetChildren() { }
-                protected override void OnActivate() { }
-                protected override void OnDeactivate(Boolean close) { }
             }
         }
     }
@@ -125,9 +118,6 @@ namespace Caliburn.Dynamic
         public virtual void CanClose(Action<Boolean> callback) { }
         [ObsoleteAttribute("Use OnPropertyChanging and OnPropertyChanged instead.")]
         public void NotifyOfPropertyChange(String propertyName) { }
-        protected virtual void OnActivate() { }
-        protected virtual void OnDeactivate(Boolean close) { }
-        protected virtual void OnInitialize() { }
         [ObsoleteAttribute("Do not use.")]
         public void Refresh() { }
         public virtual void TryClose(Nullable<Boolean> dialogResult = null) { }
@@ -141,11 +131,6 @@ namespace Caliburn.Dynamic
         public IObservable<Object> ViewReady { get; }
         protected IDictionary<Object, Object> Views { get; }
         public event EventHandler<ViewAttachedEventArgs> Caliburn.Micro.IViewAware.ViewAttached;
-        public virtual Object GetView(Object context = null) { }
-        protected void InitializeObservableEvent<TArg>(ref Subject<> subject, ref IObservable<> observable, Action<TArg> subscription) { }
-        protected virtual void OnViewAttached(Object view, Object context) { }
-        protected virtual void OnViewLoaded(Object view) { }
-        protected virtual void OnViewReady(Object view) { }
     }
     public interface IAsyncCommand : IAsyncCommand<Object>, IRaiseCanExecuteChanged, ICommand { }
     public interface IAsyncCommand<in T> : IRaiseCanExecuteChanged, ICommand
