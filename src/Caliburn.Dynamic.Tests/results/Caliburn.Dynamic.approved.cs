@@ -47,7 +47,6 @@ namespace Caliburn.Dynamic
     {
         public DynamicConductor() { }
         public override void ActivateItem(T item) { }
-        public override void CanClose(Action<Boolean> callback) { }
         public override void DeactivateItem(T item, Boolean close) { }
         public override IEnumerable<T> GetChildren() { }
         public class Collection<T>
@@ -61,7 +60,6 @@ namespace Caliburn.Dynamic
                 public AllActive() { }
                 public IObservableCollection<T> Items { get; }
                 public override void ActivateItem(T item) { }
-                public override void CanClose(Action<Boolean> callback) { }
                 public override void DeactivateItem(T item, Boolean close) { }
                 protected override T EnsureItem(T newItem) { }
                 public override IEnumerable<T> GetChildren() { }
@@ -72,7 +70,6 @@ namespace Caliburn.Dynamic
                 public OneActive() { }
                 public IObservableCollection<T> Items { get; }
                 public override void ActivateItem(T item) { }
-                public override void CanClose(Action<Boolean> callback) { }
                 public override void DeactivateItem(T item, Boolean close) { }
                 protected virtual T DetermineNextItemToActivate(IList<T> list, Int32 lastIndex) { }
                 protected override T EnsureItem(T newItem) { }
@@ -105,22 +102,22 @@ namespace Caliburn.Dynamic
         public DynamicScreen() { }
         public IObservable<ActivationEventArgs> Activated { get; }
         public IObservable<DeactivationEventArgs> AttemptingDeactivation { get; }
+        public Func<Task<Boolean>> CloseGuard { get; set; }
         public IObservable<DeactivationEventArgs> DeactivatedObservable { get; }
-        public virtual String DisplayName { get; set; }
+        public String DisplayName { get; set; }
         public Boolean IsActive { get; }
         public Boolean IsInitialized { get; }
         [ObsoleteAttribute("Use ChangeNotificationEnabled and SuppressNotifications instead.", true)]
         public Boolean IsNotifying { get; set; }
-        public virtual Object Parent { get; set; }
+        public Object Parent { get; set; }
         public event EventHandler<ActivationEventArgs> Caliburn.Micro.IActivate.Activated;
         public event EventHandler<DeactivationEventArgs> Caliburn.Micro.IDeactivate.AttemptingDeactivation;
         public event EventHandler<DeactivationEventArgs> Caliburn.Micro.IDeactivate.Deactivated;
-        public virtual void CanClose(Action<Boolean> callback) { }
         [ObsoleteAttribute("Use OnPropertyChanging and OnPropertyChanged instead.")]
         public void NotifyOfPropertyChange(String propertyName) { }
         [ObsoleteAttribute("Do not use.")]
         public void Refresh() { }
-        public virtual void TryClose(Nullable<Boolean> dialogResult = null) { }
+        public void TryClose(Nullable<Boolean> dialogResult = null) { }
     }
     public class DynamicViewAware : BindableObject, IViewAware
     {

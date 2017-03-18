@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Reactive.Subjects;
 using System.Threading;
+using System.Threading.Tasks;
 using Caliburn.Micro;
 
 namespace Caliburn.Dynamic
@@ -49,7 +50,7 @@ namespace Caliburn.Dynamic
         /// <summary>
         /// Gets or Sets the Parent <see cref = "IConductor" />
         /// </summary>
-        public virtual object Parent
+        public object Parent
         {
             get { return parent; }
             set
@@ -66,7 +67,7 @@ namespace Caliburn.Dynamic
         /// <summary>
         /// Gets or Sets the Display Name
         /// </summary>
-        public virtual string DisplayName
+        public string DisplayName
         {
             get { return displayName; }
             set
@@ -84,7 +85,7 @@ namespace Caliburn.Dynamic
         /// Indicates whether or not this instance is currently active.
         /// Virtualized in order to help with document oriented view models.
         /// </summary>
-        public virtual bool IsActive
+        public bool IsActive
         {
             get { return isActive; }
             private set
@@ -102,7 +103,7 @@ namespace Caliburn.Dynamic
         /// Indicates whether or not this instance is currently initialized.
         /// Virtualized in order to help with document oriented view models.
         /// </summary>
-        public virtual bool IsInitialized
+        public bool IsInitialized
         {
             get { return isInitialized; }
             private set
@@ -115,6 +116,8 @@ namespace Caliburn.Dynamic
                 OnPropertyChanged(nameof(IsInitialized), before, value);
             }
         }
+
+        public Func<Task<bool>> CloseGuard { get; set; }
 
         /// <summary>
         /// Raised after activation occurs.
@@ -270,9 +273,12 @@ namespace Caliburn.Dynamic
         /// Called to check whether or not this instance can close.
         /// </summary>
         /// <param name = "callback">The implementor calls this action with the result of the close check.</param>
-        public virtual void CanClose(Action<bool> callback)
+        void IGuardClose.CanClose(Action<bool> callback)
         {
-            callback(true);
+            if (CloseGuard == null)
+                callback(true);
+
+            callback(CloseGuard().GetAwaiter().GetResult());
         }
 
         /// <summary>
@@ -280,7 +286,7 @@ namespace Caliburn.Dynamic
         /// Also provides an opportunity to pass a dialog result to it's corresponding view.
         /// </summary>
         /// <param name="dialogResult">The dialog result.</param>
-        public virtual void TryClose(bool? dialogResult = null)
+        public void TryClose(bool? dialogResult = null)
         {
             PlatformProvider.Current.GetViewCloseAction(this, Views.Values, dialogResult).OnUIThread();
         }

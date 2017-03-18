@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Caliburn.Micro;
 
 namespace Caliburn.Dynamic
@@ -9,6 +9,16 @@ namespace Caliburn.Dynamic
     /// </summary>
     public partial class DynamicConductor<T> : DynamicConductorBaseWithActiveItem<T> where T : class
     {
+        public DynamicConductor()
+        {
+            CloseGuard = () =>
+            {
+                var tcs = new TaskCompletionSource<bool>();
+                CloseStrategy.Execute(new[] { ActiveItem }, (canClose, items) => tcs.SetResult(canClose));
+                return tcs.Task;
+            };
+        }
+
         /// <summary>
         /// Activates the specified item.
         /// </summary>
@@ -50,15 +60,6 @@ namespace Caliburn.Dynamic
                 if (canClose)
                     ChangeActiveItem(default(T), close);
             });
-        }
-
-        /// <summary>
-        /// Called to check whether or not this instance can close.
-        /// </summary>
-        /// <param name="callback">The implementor calls this action with the result of the close check.</param>
-        public override void CanClose(Action<bool> callback)
-        {
-            CloseStrategy.Execute(new[] { ActiveItem }, (canClose, items) => callback(canClose));
         }
 
         internal override void OnActivate()

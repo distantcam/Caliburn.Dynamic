@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Threading.Tasks;
 using Caliburn.Micro;
 
 namespace Caliburn.Dynamic
@@ -58,6 +58,22 @@ namespace Caliburn.Dynamic
                                 break;
                         }
                     };
+
+                    CloseGuard = () =>
+                    {
+                        var tcs = new TaskCompletionSource<bool>();
+                        CloseStrategy.Execute(items.ToList(), (canClose, closable) =>
+                        {
+                            if (!canClose && closable.Any())
+                            {
+                                closable.OfType<IDeactivate>().Apply(x => x.Deactivate(true));
+                                items.RemoveRange(closable);
+                            }
+
+                            tcs.SetResult(canClose);
+                        });
+                        return tcs.Task;
+                    };
                 }
 
                 /// <summary>
@@ -80,24 +96,6 @@ namespace Caliburn.Dynamic
                     {
                         items.Clear();
                     }
-                }
-
-                /// <summary>
-                /// Called to check whether or not this instance can close.
-                /// </summary>
-                /// <param name="callback">The implementor calls this action with the result of the close check.</param>
-                public override void CanClose(Action<bool> callback)
-                {
-                    CloseStrategy.Execute(items.ToList(), (canClose, closable) =>
-                    {
-                        if (!canClose && closable.Any())
-                        {
-                            closable.OfType<IDeactivate>().Apply(x => x.Deactivate(true));
-                            items.RemoveRange(closable);
-                        }
-
-                        callback(canClose);
-                    });
                 }
 
                 internal override void OnInitialize()
