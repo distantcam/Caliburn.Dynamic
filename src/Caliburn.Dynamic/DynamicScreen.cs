@@ -277,8 +277,8 @@ namespace Caliburn.Dynamic
         {
             if (CloseGuard == null)
                 callback(true);
-
-            callback(CloseGuard().GetAwaiter().GetResult());
+            else
+                callback(AsyncPump.Run(CloseGuard));
         }
 
         /// <summary>
