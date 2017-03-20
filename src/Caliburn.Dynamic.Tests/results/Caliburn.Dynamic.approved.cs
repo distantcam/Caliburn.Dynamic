@@ -211,4 +211,13 @@ namespace Caliburn.Dynamic
         public static IScheduler BackgroundScheduler { get; set; }
         public static IScheduler MainScheduler { get; set; }
     }
+    [System.Windows.TemplatePartAttribute(Name="PART_Presenter", Type=typeof(System.Windows.Controls.ContentPresenter))]
+    public class ViewModelControl : System.Windows.Controls.ContentControl
+    {
+        public static readonly System.Windows.DependencyProperty ContextProperty;
+        public ViewModelControl() { }
+        public Object Context { get; set; }
+        public override void OnApplyTemplate() { }
+        protected override void OnContentChanged(Object oldContent, Object newContent) { }
+    }
 }
