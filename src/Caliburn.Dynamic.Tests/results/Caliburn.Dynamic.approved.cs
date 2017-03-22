@@ -107,16 +107,10 @@ namespace Caliburn.Dynamic
         public String DisplayName { get; set; }
         public Boolean IsActive { get; }
         public Boolean IsInitialized { get; }
-        [ObsoleteAttribute("Use ChangeNotificationEnabled and SuppressNotifications instead.", true)]
-        public Boolean IsNotifying { get; set; }
         public Object Parent { get; set; }
         public event EventHandler<ActivationEventArgs> Caliburn.Micro.IActivate.Activated;
         public event EventHandler<DeactivationEventArgs> Caliburn.Micro.IDeactivate.AttemptingDeactivation;
         public event EventHandler<DeactivationEventArgs> Caliburn.Micro.IDeactivate.Deactivated;
-        [ObsoleteAttribute("Use OnPropertyChanging and OnPropertyChanged instead.")]
-        public void NotifyOfPropertyChange(String propertyName) { }
-        [ObsoleteAttribute("Do not use.")]
-        public void Refresh() { }
         public void TryClose(Nullable<Boolean> dialogResult = null) { }
     }
     public class DynamicViewAware : BindableObject, IViewAware

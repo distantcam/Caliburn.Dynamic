@@ -298,7 +298,7 @@ namespace Caliburn.Dynamic
         /// <remarks>Obsolete. Should use ChangeNotificationEnabled and SuppressNotifications instead.</remarks>
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Obsolete("Use ChangeNotificationEnabled and SuppressNotifications instead.", true)]
-        public bool IsNotifying
+        bool INotifyPropertyChangedEx.IsNotifying
         {
             get { return ChangeNotificationEnabled; }
             set { throw new NotSupportedException(); }
@@ -311,7 +311,7 @@ namespace Caliburn.Dynamic
         /// <remarks>Obsolete. Should use OnPropertyChanging and OnPropertyChanged instead.</remarks>
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Obsolete("Use OnPropertyChanging and OnPropertyChanged instead.")]
-        public void NotifyOfPropertyChange(string propertyName)
+        void INotifyPropertyChangedEx.NotifyOfPropertyChange(string propertyName)
         {
             propertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
@@ -322,7 +322,7 @@ namespace Caliburn.Dynamic
         /// <remarks>Obsolete. Do not use.</remarks>
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Obsolete("Do not use.")]
-        public void Refresh()
+        void INotifyPropertyChangedEx.Refresh()
         {
             propertyChanged?.Invoke(this, new PropertyChangedEventArgs(string.Empty));
         }
